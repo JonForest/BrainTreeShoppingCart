@@ -7,6 +7,7 @@ const db =  mongoose.createConnection('mongodb://localhost/inkub8_test');
 const cartSchema = require('../schemas/cart_schema');
 const paymentAttemptSchema = require('../schemas/payment_attempt_schema');
 const Cart = db.model('Cart', cartSchema);
+require('productschemas')(db);
 
 describe("Braintree Payments", function() {
     db.model('PaymentAttempt', paymentAttemptSchema);

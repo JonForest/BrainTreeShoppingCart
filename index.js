@@ -1,20 +1,16 @@
 /* global require */
 'use strict';
 
-var ShoppingCart = require('./modules/shopping_cart.js');
-var cartSchema = require('./schemas/cart_schema');
-let productSchema = require('./schemas/product_schema');
-let discountCodeSchema = require('./schemas/discount_code_schema');
-let paymentAttemptSchema = require('./schemas/discount_code_schema');
-let mongoose = require('mongoose');
-let logger = require('./utils/logger');
+const ShoppingCart = require('./modules/shopping_cart.js');
+const cartSchema = require('./schemas/cart_schema');
+const paymentAttemptSchema = require('./schemas/payment_attempt_schema');
+const mongoose = require('mongoose');
+const logger = require('./utils/logger');
 
 var Payments = function(db) {
 
     // Initialise schemas for the module
     db.model('Cart', cartSchema);
-    db.model('Product', productSchema);
-    db.model('DiscountCode', discountCodeSchema);
     db.model('PaymentAttempt', paymentAttemptSchema);
 
     let Cart = db.model('Cart');

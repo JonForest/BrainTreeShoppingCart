@@ -7,6 +7,7 @@ const Payments = require('../index.js');
 const async = require('async');
 
 const db =  mongoose.createConnection('mongodb://localhost/inkub8_test');
+ require('productschemas')(db);
 const payments = new Payments(db);
 const DiscountCode = db.model('DiscountCode');
 
