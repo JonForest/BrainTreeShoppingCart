@@ -17,7 +17,6 @@
   "dependencies": {
     "async": "^0.9.2",
     "braintree": "^1.29.0",
-    "inkub8_schemas": "git+https://7cb4b4ba701810a86a73e8fe5ad3e6a98a70288c:x-oauth-basic@github.com/inkub8/inkub8_schemas.git",
     "lodash": "^3.10.1",
     "mongoose": "4.1.x",
     "winston": "^0.8.3",
