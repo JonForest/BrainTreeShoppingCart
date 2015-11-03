@@ -1,5 +1,5 @@
 {
-  "name": "braintreeshoppingart",
+  "name": "braintreeshoppingcart",
   "version": "0.0.1",
   "description": "Handling online payments using Braintree",
   "main": "index.js",
