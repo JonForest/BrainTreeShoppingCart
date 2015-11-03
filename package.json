@@ -1,14 +1,14 @@
 {
-  "name": "inkub8_payments",
+  "name": "braintreeshoppingart",
   "version": "0.0.1",
-  "description": "Handling online payments for Big Idea Space",
-  "main": "shopping_cart.js",
+  "description": "Handling online payments using Braintree",
+  "main": "index.js",
   "scripts": {
     "test": "mocha test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/inkub8/inkub8_payments.git"
+    "url": "git+https://github.com/JonForest/braintreeshoppingcart.git"
   },
   "devDependencies": {
     "mocha": "^2.0.1",
@@ -25,7 +25,7 @@
   "author": "Jonathan Hollingsworth",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/inkub8/inkub8_payments/issues"
+    "url": "https://github.com/JonForest/braintreeshoppingcart/issues"
   },
-  "homepage": "https://github.com/inkub8/inkub8_payments#readme"
+  "homepage": "https://github.com/JonForest/braintreeshoppingcarts#readme"
 }

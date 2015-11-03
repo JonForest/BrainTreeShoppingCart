@@ -13,6 +13,7 @@ describe("Braintree Payments", function() {
 
     describe("Creating a clientToken", function() {
         it('generates a clientToken', function(done) {
+            console.log('vars', process.env);
             if (!testPayments()) {
                 done();
                 return;
