@@ -9,7 +9,7 @@
 * BT_PRIVATEKEY
 * BT_ENVIRONMENT
 
-Do not use yet in productino.  This is not even alpha code.
+Do not use yet in production.  This is not even alpha code.
 
 You're welcome to poke around however.
 
