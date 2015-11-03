@@ -9,18 +9,9 @@
 * BT_PRIVATEKEY
 * BT_ENVIRONMENT
 
-Example usage
-## Instantiation
-```
-let Payments = require('inkub8_payments);
-let payments = new Payments(mongooseConnection);
-```
+Do not use yet in productino.  This is not even alpha code.
 
-## Creating a cart and adding products
-```
-// Create a new cart.  Pass in the project Id.  Only one open cart per project allowed
-let cart = payments.createNewCart(projectId);
-cart.addProducts([{productTag: 'basic', discountCode: 'beta'}]);
+You're welcome to poke around however.
 
 
 
