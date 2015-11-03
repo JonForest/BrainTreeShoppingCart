@@ -1,6 +1,6 @@
 {
   "name": "inkub8_payments",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Handling online payments for Big Idea Space",
   "main": "shopping_cart.js",
   "scripts": {
