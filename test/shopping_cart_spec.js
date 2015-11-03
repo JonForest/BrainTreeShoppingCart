@@ -6,20 +6,13 @@ const mongoose = require('mongoose');
 const Payments = require('../index.js');
 const async = require('async');
 
-const inkub8_schemas = require('inkub8_schemas')();
 const db =  mongoose.createConnection('mongodb://localhost/inkub8_test');
-inkub8_schemas.init(db);
-const loadData = require('./load_data.js');
 const payments = new Payments(db);
-const Project = db.model('Project');
-const User = db.model('User');
 const DiscountCode = db.model('DiscountCode');
 
-describe("Cart", function() {
-    let projects;
+describe("Cart:", function() {
+    const objectId = mongoose.Types.ObjectId();
     before(function(done) {
-        Project.remove().exec();
-        User.remove().exec();
         DiscountCode.remove().exec();
 
         //Set the start/end dates
@@ -29,13 +22,6 @@ describe("Cart", function() {
         endDate.setDate(startDate.getDate() + 14);
 
         async.parallel([
-            //Create the project test data
-            function (next) {
-                loadData.loadProjects(db, function(projs) {
-                    projects = projs;
-                    next();
-                });
-            },
             // Create a product we can use
             function (next) {
                 let Product = db.model('Product');
@@ -63,15 +49,14 @@ describe("Cart", function() {
 
     });
 
-    describe('New Cart', function() {
+    describe('New Cart - ', function() {
         let Cart;
         beforeEach(function() {
             Cart = db.model('Cart');
             Cart.remove().exec();
         });
         it('creates a new cart', function(done) {
-            //TODO: If I want to disassociate this from the project, I could turn this into a 'reference' number
-            payments.createNewCart(projects[0].id, function(err, cart) {
+            payments.createNewCart(objectId, function(err, cart) {
                 (cart != null).should.equal(true);
                 (cart.hasOwnProperty('addProduct').should.equal(true));
                 done();
@@ -80,9 +65,10 @@ describe("Cart", function() {
         });
 
         it('closes any existing open carts when retrieving a new cart', function(done) {
-            payments.createNewCart(projects[0].id, function() {
-                payments.createNewCart(projects[0].id, function() {
-                    Cart.find({project: projects[0].id, status: 'open'}, function (err, existingCarts) {
+            payments.createNewCart(objectId, function() {
+                payments.createNewCart(objectId, function() {
+                    Cart.find({reference: objectId, status: 'open'}, function (err, existingCarts) {
+                        debugger;
                         (existingCarts.length).should.equal(1);
                         done();
                     });
@@ -102,9 +88,9 @@ describe("Cart", function() {
         });
 
         it('retrieves an existing cart', function(done) {
-            payments.createNewCart(projects[0].id, function(err, cart) {
+            payments.createNewCart(objectId, function(err, cart) {
                 existingCart = cart;
-                payments.getExistingCart(projects[0].id, function(err, cart) {
+                payments.getExistingCart(objectId, function(err, cart) {
                     (cart == null).should.not.equal(true);
                     done();
                 });
@@ -112,7 +98,7 @@ describe("Cart", function() {
         });
 
         it('returns a null object if there is no existing cart', function(done) {
-            payments.getExistingCart(projects[0].id, function(err, cart) {
+            payments.getExistingCart(objectId, function(err, cart) {
                 (cart == null).should.equal(true);
                 done();
             });
@@ -121,7 +107,7 @@ describe("Cart", function() {
 
     describe('Adding/Removing products', function() {
         it('add a product to the cart', function(done) {
-            payments.createNewCart(projects[0].id, function(err, shoppingCart) {
+            payments.createNewCart(objectId, function(err, shoppingCart) {
                 shoppingCart.addProduct('halftoolstest', function(err, cartEntity) {
                     //Both the updatedCart and cart should represent these
                     cartEntity.products.length.should.equal(1);
@@ -132,7 +118,7 @@ describe("Cart", function() {
             });
         });
         it('fails when you attempt to add no products to the cart', function(done) {
-            payments.createNewCart(projects[0].id, function(err, shoppingCart) {
+            payments.createNewCart(objectId, function(err, shoppingCart) {
                 shoppingCart.addProduct(null, function (err, cartEntity) {
                     (err !== null).should.equal(true);
                     done();
@@ -140,7 +126,7 @@ describe("Cart", function() {
             });
         });
         it('fails when you attempt to add an incorrect product to the cart', function(done) {
-            payments.createNewCart(projects[0].id, function(err, shoppingCart) {
+            payments.createNewCart(objectId, function(err, shoppingCart) {
                 shoppingCart.addProduct('doesnotexist', function (err, cartEntity) {
                     (err !== null).should.equal(true);
                     err.message.should.containEql('Failed to add the product to the cart');
@@ -163,7 +149,7 @@ describe("Cart", function() {
             done();
         });
         it('adding a 50% discount code results in a half value cart', function(done) {
-            payments.createNewCart(projects[0].id, function(err, shoppingCart) {
+            payments.createNewCart(objectId, function(err, shoppingCart) {
                 shoppingCart.addProduct('halftoolstest', function () {
                     shoppingCart.applyDiscountCode('TEST50', function (err, cartEntity) {
                         (err === null).should.equal(true);
@@ -188,7 +174,7 @@ describe("Cart", function() {
             done();
         });
         it('can retrieve a client token', function(done) {
-            payments.createNewCart(projects[0].id, function(err, shoppingCart) {
+            payments.createNewCart(objectId, function(err, shoppingCart) {
                 shoppingCart.addProduct('halftoolstest', function () {
                     shoppingCart.getPaymentClientToken(function(err, token) {
                         (token != null).should.equal(true);

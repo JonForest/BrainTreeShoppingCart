@@ -27,8 +27,8 @@ var Payments = function(db) {
      * @param {Object} project
      * @param {Function) done
      */
-    function createNewCart(projectId, done) {
-        Cart.findOne({project: projectId, status: 'open'}, function(err, existingCart) {
+    function createNewCart(refId, done) {
+        Cart.findOne({reference: refId, status: 'open'}, function(err, existingCart) {
             if (err) {
                 logger.error('createNewCart, Cart.findOne method failed with error: ' + err.message);
             }
@@ -40,21 +40,21 @@ var Payments = function(db) {
                     if (err) {
                         logger.error('createNewCart, save existingCar failed with error: ' + err.message);
                     }
-                    returnNewCart(projectId, done);
+                    returnNewCart(refId, done);
                 });
             } else {
-                returnNewCart(projectId, done);
+                returnNewCart(refId, done);
             }
         });
     }
 
     /**
      * @private
-     * @param {string} projectId
+     * @param {string} refId
      * @param {Function} done
      */
-    function returnNewCart(projectId, done) {
-        let cart = new Cart({project: mongoose.Types.ObjectId(projectId)});
+    function returnNewCart(refId, done) {
+        let cart = new Cart({reference: mongoose.Types.ObjectId(refId)});
         cart.save(function() {
             done(
                 null,
@@ -64,8 +64,8 @@ var Payments = function(db) {
 
     }
 
-    function getExistingCart(projectId, done) {
-        Cart.findOne({project: projectId, status: 'open'}, function(err, existingCart) {
+    function getExistingCart(refId, done) {
+        Cart.findOne({reference: refId, status: 'open'}, function(err, existingCart) {
             if (err) {
                 //TODO: Log an error here
             }
@@ -76,8 +76,6 @@ var Payments = function(db) {
             }
         });
     }
-
-
 
     //Expose certain functions publically
     return {

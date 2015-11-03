@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 
 var cartSchema = new Schema({
     /* amount: Number, - will be a psuedo element */
-    project: { type: Schema.Types.ObjectId, required: true },
+    reference: { type: Schema.Types.ObjectId, required: true },
     discountCode: { type: Schema.Types.ObjectId, ref: 'DiscountCode'},
     currency: {type: String, enum: ['NZD'], default: 'NZD'},
     products: [{

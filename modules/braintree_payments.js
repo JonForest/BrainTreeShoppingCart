@@ -54,7 +54,6 @@ const BraintreePayments = function(db, cart) {
                 amount: paymentAttempt.amount,
                 paymentMethodNonce: paymentAttempt.nonce
             }, function (err, result) {
-                console.log('resultmesasge:', result);
                 //Payment attempt was not made successfully.  Not a rejection of the payment, but an unsuccessful attempt
                 if (err) {
                     logger.error('BraintreePayments:makePayment - sale method.  Failed to connect with Braintree with error: ' + err.message);
@@ -73,7 +72,7 @@ const BraintreePayments = function(db, cart) {
                     return; //Leave the function
                 }
 
-                // Sucessfully contacted Braintree.
+                // Successfully contacted Braintree.
                 // Save the result to the paymentAttempt record
                 paymentAttempt.result = result;
                 paymentAttempt.success = result.success;

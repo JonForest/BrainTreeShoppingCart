@@ -36,7 +36,6 @@ describe("Braintree Payments", function() {
             paymentAttempt(100, function(err, result) {
                 (err == null).should.equal(true);
                 (result.success).should.equal(true);
-                console.log(result.message);
                 done();
             })
         });
@@ -57,10 +56,10 @@ describe("Braintree Payments", function() {
                 done();
                 return;
             }
-            paymentAttempt(5001.50, function(err, result) {
+            paymentAttempt(5001, function(err, result) {
                 (err != null).should.equal(true);
                 (result.success).should.equal(false);
-                (result.message).should.containEql('Incomplete');
+                (result.message).should.containEql('incomplete');
                 done();
             })
         });
