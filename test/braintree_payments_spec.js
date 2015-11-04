@@ -30,6 +30,7 @@ describe("Braintree Payments", function() {
     //TODO: Consider use of sinon.js to stub out actual requests to Braintree.  Though, I do like having the real responses...?
     describe("Making a payment attempt", function() {
         it('makes a successful attempt', function(done) {
+            this.timeout(3000);
             if (!testPayments()) {
                 done();
                 return;
