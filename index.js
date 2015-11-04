@@ -18,10 +18,15 @@ var Payments = function(db) {
 
 
     /**
+     * @callback cartCallback
+     * @param {Object} err
+     * @param {Object} shoppingCart
+     */
+    /**
      * Create a new instance of the cart.
      * If there is an existing open instance, and there shouldn't be really, then delete that and return
-     * @param {Object} project
-     * @param {Function) done
+     * @param {Object} refId
+     * @param {cartCallback} done
      */
     function createNewCart(refId, done) {
         Cart.findOne({reference: refId, status: 'open'}, function(err, existingCart) {
@@ -47,7 +52,7 @@ var Payments = function(db) {
     /**
      * @private
      * @param {string} refId
-     * @param {Function} done
+     * @param {cartCallback} done
      */
     function returnNewCart(refId, done) {
         let cart = new Cart({reference: mongoose.Types.ObjectId(refId)});
@@ -60,6 +65,12 @@ var Payments = function(db) {
 
     }
 
+    /**
+     * Create a new instance of the cart.
+     * If there is an existing open instance, and there shouldn't be really, then delete that and return
+     * @param {Object} refId
+     * @param {cartCallback} done
+     */
     function getExistingCart(refId, done) {
         Cart.findOne({reference: refId, status: 'open'}, function(err, existingCart) {
             if (err) {
