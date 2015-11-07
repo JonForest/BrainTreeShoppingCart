@@ -10,11 +10,13 @@ const db =  mongoose.createConnection('mongodb://localhost/inkub8_test');
  require('productschemas')(db);
 const payments = new Payments(db);
 const DiscountCode = db.model('DiscountCode');
+const Product = db.model('Product');
 
 describe("Cart:", function() {
     const objectId = mongoose.Types.ObjectId();
     let product;
     before(function(done) {
+        Product.remove().exec();
         DiscountCode.remove().exec();
 
         //Set the start/end dates
@@ -26,7 +28,6 @@ describe("Cart:", function() {
         async.parallel([
             // Create a product we can use
             function (next) {
-                let Product = db.model('Product');
                 Product.remove().exec();
                 product = new Product({
                     name: 'Competition and Market Analysis Tools - Test',
@@ -38,6 +39,11 @@ describe("Cart:", function() {
             },
             // Create a new percentage discount
             function (next) {
+                console.log(product.id);
+                Product.findById(product.id, function(err, prod) {
+                   console.log(err);
+                    console.log(prod);
+                });
                 (new DiscountCode({
                     description: 'A 50% discount code for testing',
                     code: 'TEST50',
