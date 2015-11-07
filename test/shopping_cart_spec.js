@@ -35,7 +35,7 @@ describe("Cart:", function() {
                     rrp: '100',
                     currencyCode: 'NZD'
                 });
-                product.save(next())
+                product.save(next)
             },
             // Create a new percentage discount
             function (next) {
@@ -52,7 +52,8 @@ describe("Cart:", function() {
                     endDate: endDate
                 })).save(next)
             }
-        ], function(/*err, results*/) {
+        ], function(err/*, results*/) {
+            console.log(err);
            done();
         });
 
