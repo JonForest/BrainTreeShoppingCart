@@ -31,7 +31,8 @@ describe("Cart:", function() {
                 Product.remove().exec();
                 product = new Product({
                     name: 'Competition and Market Analysis Tools - Test',
-                    tag: 'halftoolstest',
+                    type: 'project',
+                    tag: 'halftools',
                     rrp: '100',
                     currencyCode: 'NZD'
                 });
@@ -39,11 +40,6 @@ describe("Cart:", function() {
             },
             // Create a new percentage discount
             function (next) {
-                console.log(product.id);
-                Product.findById(product.id, function(err, prod) {
-                   console.log(err);
-                    console.log(prod);
-                });
                 (new DiscountCode({
                     description: 'A 50% discount code for testing',
                     code: 'TEST50',
@@ -53,7 +49,6 @@ describe("Cart:", function() {
                 })).save(next)
             }
         ], function(err/*, results*/) {
-            console.log(err);
            done();
         });
 
@@ -120,7 +115,7 @@ describe("Cart:", function() {
                 shoppingCart.addProduct({productId: product.id}, function(err, cartEntity) {
                     //Both the updatedCart and cart should represent these
                     cartEntity.products.length.should.equal(1);
-                    cartEntity.products[0].product.tag.should.equal('halftoolstest');
+                    cartEntity.products[0].product.tag.should.equal('halftools');
                     cartEntity.totalToPay.should.equal(100);
                     done();
                 });
@@ -175,7 +170,7 @@ describe("Cart:", function() {
         });
         it('can retrieve a client token', function(done) {
             payments.createNewCart(objectId, function(err, shoppingCart) {
-                shoppingCart.addProduct('halftoolstest', function () {
+                shoppingCart.addProduct('halftools', function () {
                     shoppingCart.getPaymentClientToken(function(err, token) {
                         (token != null).should.equal(true);
                         (err === null).should.equal(true);
