@@ -3,6 +3,7 @@
 
 const async = require('async');
 const logger = require('../utils/logger');
+const mongoose = require('mongoose');
 const BrainTreePayments = require('./braintree_payments.js');
 
 
@@ -14,18 +15,20 @@ const ShoppingCart = function(db, cart) {
 
     /**
      *
-     * @param {string} productTag
+     * @param {Object} productDetails
+     * @param {string} productDetails.productId
+     * @param {number} productDetails.cost
      * @param {Function} done
      */
-    this.addProduct = (productTag, done) => {
+    this.addProduct = (productDetails, done) => {
         // If no items were passed in, then exit
-        if (!productTag) {
+        if (!productDetails || !productDetails.productId) {
             done(new Error('Failed as no product provided to add to the cart'), null);
             return;
         }
 
         //We have some items, add each one to the cart
-        getProductAndRRP(productTag, function(err, product) {
+        getProductAndRRP(productDetails, function(err, product) {
             if (err) {
                 done(new Error('Failed to add the product to the cart'), null);
             } else {
@@ -46,12 +49,14 @@ const ShoppingCart = function(db, cart) {
 
     /**
      *
-     * @param {string} itemTag
+     * @param {Object} productDetails
+     * @param {string} productDetails.productId
+     * @param {number} productDetails.cost
      * @param {Function} done
      */
-    function getProductAndRRP(itemTag, done) {
+    function getProductAndRRP(productDetails, done) {
         //Get the product
-        Product.findOne({tag: itemTag, status: 'live'}, function(err, product) {
+        Product.findOne({_id: mongoose.Types.ObjectId(productDetails.productId), status: 'live'}, function(err, product) {
             if (err) {
                 logger.error('ShoppingCart:getProductAndRRP - findOne method.  Failed with "productTag": ' + itemTag + '  With error: ' + err.message);
                 done(err, null);
@@ -60,7 +65,7 @@ const ShoppingCart = function(db, cart) {
             } else {
                 done(null, {
                     product: product,
-                    cost: product.rrp
+                    cost: productDetails.cost || product.rrp
                 });
             }
         });
@@ -103,8 +108,6 @@ const ShoppingCart = function(db, cart) {
      * @param {Function} done
      */
     function calculateTotalCost(cart, done) {
-        // Need to populate the discount code to understand the discount
-        //TOOD: Maybe need to populate cart somewhere before this  Not usre what is going?
         // Populate it
         cart.populate('discountCode products.product', function() {
             if (cart.discountCode) {
@@ -121,6 +124,7 @@ const ShoppingCart = function(db, cart) {
         brainTreePayments.getClientToken(done);
     };
 
+    //tODO: Remove at some point; leaving in now for a quick reference of public functions
     //return {
     //    addProduct: addProduct,
     //    removeProduct: removeProduct,

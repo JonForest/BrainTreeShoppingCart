@@ -13,6 +13,7 @@ const DiscountCode = db.model('DiscountCode');
 
 describe("Cart:", function() {
     const objectId = mongoose.Types.ObjectId();
+    let product;
     before(function(done) {
         DiscountCode.remove().exec();
 
@@ -27,12 +28,13 @@ describe("Cart:", function() {
             function (next) {
                 let Product = db.model('Product');
                 Product.remove().exec();
-                (new Product({
+                product = new Product({
                     name: 'Competition and Market Analysis Tools - Test',
                     tag: 'halftoolstest',
                     rrp: '100',
                     currencyCode: 'NZD'
-                })).save(next())
+                });
+                product.save(next())
             },
             // Create a new percentage discount
             function (next) {
@@ -69,7 +71,6 @@ describe("Cart:", function() {
             payments.createNewCart(objectId, function() {
                 payments.createNewCart(objectId, function() {
                     Cart.find({reference: objectId, status: 'open'}, function (err, existingCarts) {
-                        debugger;
                         (existingCarts.length).should.equal(1);
                         done();
                     });
@@ -109,7 +110,7 @@ describe("Cart:", function() {
     describe('Adding/Removing products', function() {
         it('add a product to the cart', function(done) {
             payments.createNewCart(objectId, function(err, shoppingCart) {
-                shoppingCart.addProduct('halftoolstest', function(err, cartEntity) {
+                shoppingCart.addProduct({productId: product.id}, function(err, cartEntity) {
                     //Both the updatedCart and cart should represent these
                     cartEntity.products.length.should.equal(1);
                     cartEntity.products[0].product.tag.should.equal('halftoolstest');
@@ -122,15 +123,6 @@ describe("Cart:", function() {
             payments.createNewCart(objectId, function(err, shoppingCart) {
                 shoppingCart.addProduct(null, function (err, cartEntity) {
                     (err !== null).should.equal(true);
-                    done();
-                });
-            });
-        });
-        it('fails when you attempt to add an incorrect product to the cart', function(done) {
-            payments.createNewCart(objectId, function(err, shoppingCart) {
-                shoppingCart.addProduct('doesnotexist', function (err, cartEntity) {
-                    (err !== null).should.equal(true);
-                    err.message.should.containEql('Failed to add the product to the cart');
                     done();
                 });
             });
@@ -151,7 +143,7 @@ describe("Cart:", function() {
         });
         it('adding a 50% discount code results in a half value cart', function(done) {
             payments.createNewCart(objectId, function(err, shoppingCart) {
-                shoppingCart.addProduct('halftoolstest', function () {
+                shoppingCart.addProduct({productId: product.id}, function () {
                     shoppingCart.applyDiscountCode('TEST50', function (err, cartEntity) {
                         (err === null).should.equal(true);
                         cartEntity.totalToPay.should.equal(50);
