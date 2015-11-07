@@ -57,6 +57,8 @@ const ShoppingCart = function(db, cart) {
     function getProductAndRRP(productDetails, done) {
         //Get the product
         Product.findOne({_id: mongoose.Types.ObjectId(productDetails.productId), status: 'live'}, function(err, product) {
+            console.log('error', err);
+            console.log('product', product);
             if (err) {
                 logger.error('ShoppingCart:getProductAndRRP - findOne method.  Failed with "productTag": ' + itemTag + '  With error: ' + err.message);
                 done(err, null);
