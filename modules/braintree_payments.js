@@ -15,7 +15,7 @@ const gateway = braintree.connect({
  * NOTE: Error messages returned should be consumable directly via a UI
  * @param db
  * @param cart
- * @returns {{getNonce: getNonce}}
+ * @returns {{getClientToken: getClientToken, makePayment: makePayment}}
  * @constructor
  */
 const BraintreePayments = function(db, cart) {
