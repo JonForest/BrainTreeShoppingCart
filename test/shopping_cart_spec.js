@@ -160,17 +160,17 @@ describe("Cart:", function() {
     });
 
     // TODO: Leaving these out for now until I find a better way of mocking out the braintree payments
-    describe.skip('Basic payment methods', function() {
+    describe('Basic payment methods', function() {
         let Cart = db.model('Cart');
 
-        beforeEach(function(done) {
+        before(function(done) {
             //Tidy up any carts
             Cart.remove().exec();
             done();
         });
         it('can retrieve a client token', function(done) {
             payments.createNewCart(objectId, function(err, shoppingCart) {
-                shoppingCart.addProduct('halftools', function () {
+                shoppingCart.addProduct({productId: product.id}, function () {
                     shoppingCart.getPaymentClientToken(function(err, token) {
                         (token != null).should.equal(true);
                         (err === null).should.equal(true);
@@ -179,7 +179,20 @@ describe("Cart:", function() {
                 })
             });
         });
-        it('can make a successful payment');
+        it('can make a successful payment', function(done) {
+            payments.getExistingCart(objectId, function(err, shoppingCart) {
+                shoppingCart.makePaymentAttempt('fake-valid-nonce', function(err, paymentAttempt) {
+                    paymentAttempt.success.should.equal(true);
+                    done();
+                })
+            });
+        });
+
+        after(function(done) {
+            Cart.remove().exec();
+            done();
+        });
+
     });
 
 });
