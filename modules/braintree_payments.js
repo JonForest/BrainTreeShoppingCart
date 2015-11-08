@@ -42,7 +42,11 @@ const BraintreePayments = function(db, cart) {
         });
         //Save this record to the db before we make the attempt at Braintree
         paymentAttempt.save(function(err, paymentAttempt) {
-
+            if (err) {
+                logger.error('BraintreePayments:makePayment - paymentAttempt save before payment attempt.  Failed with error: ' + err.message);
+                done(new Error('Failed to record your details before making the payment attempt.  No funds have been debited.'), null);
+                return;
+            }
             /**
              * Multi-currency support
              * Not sure how this works yet; have sent an email to Braintree seeking clarification.  Not required for v1
@@ -67,7 +71,7 @@ const BraintreePayments = function(db, cart) {
                             logger.error('BraintreePayments:makePayment - paymentAttempt.save method.  Failed with error: ' + err.message);
                         }
                     });
-                    done(new Error('Failure with initialising the payment attempt.  No payment attempt was made.'), paymentAttempt);
+                    done(new Error('Failure with initialising the payment attempt.  No funds have been debited.'), paymentAttempt);
 
                     return; //Leave the function
                 }
