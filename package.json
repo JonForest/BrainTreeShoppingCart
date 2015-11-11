@@ -1,6 +1,6 @@
 {
   "name": "braintreeshoppingcart",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Handling online payments using Braintree",
   "main": "index.js",
   "scripts": {

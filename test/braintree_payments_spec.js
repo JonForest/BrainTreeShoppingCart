@@ -65,6 +65,24 @@ describe("Braintree Payments", function() {
                 done();
             })
         });
+        it('fails due to a null nonce', function(done) {
+            if (!testPayments()) {
+                done();
+                return;
+            }
+            const cart = new Cart({
+                project: 1111111,
+                totalToPay: 49.00
+            });
+
+            const braintreePayments = new BraintreePayments(db, cart);
+            braintreePayments.makePayment(null, function(err, result) {
+                (err != null).should.equal(true);
+                err.message.should.containEql('Failed to record your details');
+                done();
+            });
+        })
+
     });
 });
 

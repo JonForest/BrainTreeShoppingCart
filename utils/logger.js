@@ -3,13 +3,14 @@
 var winston = require('winston');
 require('winston-mongodb').MongoDB;
 
-var Logger = function(dbUri, app) {
+var Logger = function() {
+    const dbUri = process.env.MONGOLAB_URI || 'mongodb://localhost/inkub8';
     return new (winston.Logger)({
         transports: [
             new (winston.transports.MongoDB)({dbUri: dbUri})
         ]
     });
-};
+}();
 
 
 module.exports = Logger;
