@@ -6,7 +6,12 @@ const logger = require('../utils/logger');
 const mongoose = require('mongoose');
 const BrainTreePayments = require('./braintree_payments.js');
 
-
+/**
+ *
+ * @param {Object} db
+ * @param {Object} cart
+ * @constructor
+ */
 const ShoppingCart = function(db, cart) {
     //TODO: Doc blocks
     let Product = db.model('Product');
@@ -43,8 +48,14 @@ const ShoppingCart = function(db, cart) {
         //TODO: Placeholder.  No option to remove items from the cart in this version
     };
 
-    this.makePaymentAttempt = () => {
-        //TODO: Do this soon
+    /**
+     *
+     * @param nonce
+     * @param done
+     */
+    this.makePaymentAttempt = (nonce, done) => {
+        const brainTreePayments = new BrainTreePayments(db, cart);
+        brainTreePayments.makePayment(nonce, done);
     };
 
     /**

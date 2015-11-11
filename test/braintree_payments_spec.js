@@ -35,7 +35,7 @@ describe("Braintree Payments", function() {
                 done();
                 return;
             }
-            paymentAttempt(100, function(err, result) {
+            paymentAttempt(1000, function(err, result) {
                 (err == null).should.equal(true);
                 (result.success).should.equal(true);
                 done();
@@ -62,6 +62,18 @@ describe("Braintree Payments", function() {
                 (err != null).should.equal(true);
                 (result.success).should.equal(false);
                 (result.message).should.containEql('incomplete');
+                done();
+            })
+        });
+        it('fails if zero amount', function(done) {
+            if (!testPayments()) {
+                done();
+                return;
+            }
+            paymentAttempt(0, function(err, result) {
+                (err != null).should.equal(true);
+                (result.success).should.equal(false);
+                (result.message).should.containEql('greater than zero');
                 done();
             })
         });
