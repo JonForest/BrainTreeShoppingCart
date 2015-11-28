@@ -183,9 +183,30 @@ describe("Cart:", function() {
             payments.getExistingCart(objectId, function(err, shoppingCart) {
                 shoppingCart.makePaymentAttempt('fake-valid-nonce', function(err, paymentAttempt) {
                     paymentAttempt.success.should.equal(true);
+                    shoppingCart.getCart().status.should.equal('paid');
                     done();
                 })
             });
+        });
+        it('payment is rejected if cart is paid', function(done) {
+            let cart = new Cart({
+                reference: objectId,
+                status: 'open',
+                totalToPay: 100.00
+            });
+            cart.save(function(err) {
+                payments.getExistingCart(objectId, function(err, shoppingCart) {
+                    // Now set the status to paid
+                    cart.status = 'paid';
+                    cart.save(function () {
+                        shoppingCart.makePaymentAttempt('fake-valid-nonce', function (err, paymentAttempt) {
+                            err.message.should.containEql('Cart is already fully paid');
+                            done();
+                        })
+                    });
+                });
+            });
+
         });
 
         after(function(done) {

@@ -54,8 +54,31 @@ const ShoppingCart = function(db, cart) {
      * @param done
      */
     this.makePaymentAttempt = (nonce, done) => {
-        const brainTreePayments = new BrainTreePayments(db, cart);
-        brainTreePayments.makePayment(nonce, done);
+        //Potentially time has past since we retrieved the cart, so let's refresh it in case some multi-tab stuff is
+        //going on
+        Cart.findById(cart.id, function(err, refreshedCart) {
+            cart = refreshedCart;
+
+            if (cart.status === 'paid') {
+                done(new Error('Cart is already fully paid'), null);
+            }
+            const brainTreePayments = new BrainTreePayments(db, cart);
+            brainTreePayments.makePayment(nonce, function (err, paymentAttempt) {
+                if (err) {
+                    done(err, paymentAttempt);
+                } else {
+                    // Need to update the cart
+                    cart.status = 'paid';
+                    cart.save(function (err) {
+                        if (err) {
+                            done(new Error('Failed to save the cart after a successful payment'), null);
+                        } else {
+                            done(null, paymentAttempt);
+                        }
+                    })
+                }
+            });
+        })
     };
 
     /**

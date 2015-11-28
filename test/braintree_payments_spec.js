@@ -30,7 +30,7 @@ describe("Braintree Payments", function() {
     //TODO: Consider use of sinon.js to stub out actual requests to Braintree.  Though, I do like having the real responses...?
     describe("Making a payment attempt", function() {
         it('makes a successful attempt', function(done) {
-            this.timeout(3000);
+            this.timeout(4000);
             if (!testPayments()) {
                 done();
                 return;
@@ -52,6 +52,8 @@ describe("Braintree Payments", function() {
                 (result.message).should.containEql('Honor');
                 done();
             })
+
+//            TODO:https://developers.braintreepayments.com/reference/general/processor-responses/authorization-responses
         });
         it('fails due to a gateway rejected', function(done) {
             if (!testPayments()) {
@@ -82,30 +84,28 @@ describe("Braintree Payments", function() {
                 done();
                 return;
             }
-            const cart = new Cart({
-                project: 1111111,
-                totalToPay: 49.00
-            });
-
-            const braintreePayments = new BraintreePayments(db, cart);
-            braintreePayments.makePayment(null, function(err, result) {
+            paymentAttempt(49.00, null, function(err, result) {
                 (err != null).should.equal(true);
                 err.message.should.containEql('Failed to record your details');
                 done();
             });
-        })
+        });
 
     });
 });
 
-function paymentAttempt(amount, done) {
+function paymentAttempt(amount, nonce, done) {
+    if (typeof nonce === 'function') {
+        done = nonce;
+        nonce = 'fake-valid-nonce';
+    }
     const cart = new Cart({
         project: 1111111,
         totalToPay: amount
     });
 
     const braintreePayments = new BraintreePayments(db, cart);
-    braintreePayments.makePayment('fake-valid-nonce', done);
+    braintreePayments.makePayment(nonce, done);
 }
 
 /**
