@@ -1,6 +1,7 @@
  /* global describe, it, require */
 'use strict';
 
+require('dotenv').config();
 const should = require('should');
 const mongoose = require('mongoose');
 const Payments = require('../index.js');

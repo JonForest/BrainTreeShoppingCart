@@ -1,6 +1,7 @@
 /* global require */
 'use strict';
 
+require('dotenv').config();
 const ShoppingCart = require('./modules/shopping_cart.js');
 const cartSchema = require('./schemas/cart_schema');
 const paymentAttemptSchema = require('./schemas/payment_attempt_schema');

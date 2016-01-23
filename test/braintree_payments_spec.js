@@ -1,6 +1,7 @@
 /* global describe, it, require */
 'use strict';
 
+require('dotenv').config();
 const BraintreePayments = require('../modules/braintree_payments');
 const mongoose = require('mongoose');
 const db =  mongoose.createConnection('mongodb://localhost/inkub8_test');
@@ -112,7 +113,7 @@ function paymentAttempt(amount, nonce, done) {
  * @return {boolean}
  */
 function testPayments() {
-    if (process.env.BT_MERCHANTID && process.env.BT_PUBLICKEY && process.env.BT_PRIVATEKEY) {
+    if (process.env.ENVIRONMENT && process.env.BT_MERCHANTID && process.env.BT_PUBLICKEY && process.env.BT_PRIVATEKEY) {
         return true;
     } else {
         console.log('Must have BrianTree environment variables configured to test this');
