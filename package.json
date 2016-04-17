@@ -16,13 +16,13 @@
     "productschemas": "git+https://github.com/JonForest/productschemas.git"
   },
   "dependencies": {
-    "async": "^0.9.2",
+    "async": "1.5.2",
     "braintree": "1.29.0",
-    "dotenv": "^2.0.0",
-    "lodash": "^3.10.1",
-    "mongoose": "4.1.x",
-    "winston": "^0.8.3",
-    "winston-mongodb": "^0.5.3"
+    "dotenv": "2.0.0",
+    "lodash": "4.11.1",
+    "mongoose": "4.4.12",
+    "winston": "2.2.0",
+    "winston-mongodb": "1.4.0"
   },
   "author": "Jonathan Hollingsworth",
   "license": "ISC",
